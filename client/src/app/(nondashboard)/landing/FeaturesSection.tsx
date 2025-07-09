@@ -32,7 +32,6 @@ const FeaturesSection = () => {
         },
       });
 
-      // Animate container (equivalent to containerVariants)
       tl.fromTo(
         containerRef.current,
         {
@@ -44,38 +43,34 @@ const FeaturesSection = () => {
           y: 0,
           duration: 0.5,
         },
-      );
-
-      // Animate title (equivalent to itemVariants)
-      tl.fromTo(
-        titleRef.current,
-        {
-          opacity: 0,
-          y: 20,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-        },
-        "-=0.3", // Start 0.3s before previous animation ends
-      );
-
-      // Animate cards with stagger (equivalent to staggerChildren: 0.2)
-      tl.fromTo(
-        cardsRef.current,
-        {
-          opacity: 0,
-          y: 20,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.2, // Equivalent to staggerChildren
-        },
-        "-=0.3",
-      );
+      )
+        .fromTo(
+          titleRef.current,
+          {
+            opacity: 0,
+            y: 20,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+          },
+          "-=0.3", // Start 0.3s before previous animation ends
+        )
+        .fromTo(
+          cardsRef.current,
+          {
+            opacity: 0,
+            y: 20,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.2, // Equivalent to staggerChildren
+          },
+          "-=0.3",
+        );
     },
     { dependencies: [], scope: containerRef },
   );
