@@ -1,4 +1,6 @@
-import React, { ReactNode } from "react";
+"use client";
+
+import React, { ReactNode, useEffect } from "react";
 import { Amplify } from "aws-amplify";
 
 import {
@@ -10,6 +12,7 @@ import {
   View,
 } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
+import { usePathname, useRouter } from "next/navigation";
 
 Amplify.configure({
   Auth: {
@@ -137,13 +140,39 @@ const formFields = {
 };
 
 const Auth = ({ children }: { children: ReactNode }) => {
+  // Check if user exist/logged in
+  const { user } = useAuthenticator((context) => [context.user]);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isAuthPage = pathname.match(/^\/(signin|signup)$/);
+  const isDashboardPage =
+    pathname.startsWith("/manager") || pathname.startsWith("/tenants");
+
+  // Redirect authenticated users away from auth pages
+  useEffect(() => {
+    if (user && isAuthPage) {
+      router.push("/");
+    }
+  }, [user, isAuthPage, router]);
+
+  // Allow access to public pages without authentication
+  if (!isAuthPage && !isDashboardPage) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="h-full">
       {/* The Authenticator component uses a render prop pattern (also called
       "function as children" pattern). It expects a function as its child, not
       just regular JSX elements. This function gets called by the Authenticator
       when the user is successfully authenticated. */}
-      <Authenticator components={components} formFields={formFields}>
+      <Authenticator
+        // By default, unauthenticated users are redirected to the Sign In flow. You can explicitly redirect to Sign Up or Forgot Password:
+        initialState={pathname.includes("signup") ? "signUp" : "signIn"}
+        components={components}
+        formFields={formFields}
+      >
         {() => <>{children}</>}
       </Authenticator>
     </div>

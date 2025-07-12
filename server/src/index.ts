@@ -4,6 +4,14 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import { authMiddleware } from "./middleware/authMiddleware";
+
+/* ROUTE */
+import tenantRoutes from "./routes/tenantRoutes";
+import managerRoutes from "./routes/managerRoutes";
+// import propertyRoutes from "./routes/propertyRoutes";
+// import leaseRoutes from "./routes/leaseRoutes";
+// import applicationRoutes from "./routes/applicationRoutes";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -16,9 +24,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-app.get("/", (req, res) => {
+app.get("/", authMiddleware(["tenant"]), (req, res) => {
   res.send("This is home route");
 });
+
+// app.use("/applications", applicationRoutes);
+// app.use("/properties", propertyRoutes);
+// app.use("/leases", leaseRoutes);
+app.use("/tenants", authMiddleware(["tenant"]), tenantRoutes);
+app.use("/managers", authMiddleware(["manager"]), managerRoutes);
 
 const port = process.env.PORT || 3002;
 

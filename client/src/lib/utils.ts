@@ -25,13 +25,13 @@ export function cleanParams(params: Record<string, any>): Record<string, any> {
   return Object.fromEntries(
     Object.entries(params).filter(
       (
-        [_, value] // eslint-disable-line @typescript-eslint/no-unused-vars
+        [_, value], // eslint-disable-line @typescript-eslint/no-unused-vars
       ) =>
         value !== undefined &&
         value !== "any" &&
         value !== "" &&
-        (Array.isArray(value) ? value.some((v) => v !== null) : value !== null)
-    )
+        (Array.isArray(value) ? value.some((v) => v !== null) : value !== null),
+    ),
   );
 }
 
@@ -42,7 +42,7 @@ type MutationMessages = {
 
 export const withToast = async <T>(
   mutationFn: Promise<T>,
-  messages: Partial<MutationMessages>
+  messages: Partial<MutationMessages>,
 ) => {
   const { success, error } = messages;
 
@@ -60,7 +60,7 @@ export const createNewUserInDatabase = async (
   user: any,
   idToken: any,
   userRole: string,
-  fetchWithBQ: any
+  fetchWithBQ: any,
 ) => {
   const createEndpoint =
     userRole?.toLowerCase() === "manager" ? "/managers" : "/tenants";
@@ -75,6 +75,8 @@ export const createNewUserInDatabase = async (
       phoneNumber: "",
     },
   });
+
+  console.log("Creating new user in database: ", createUserResponse);
 
   if (createUserResponse.error) {
     throw new Error("Failed to create user record");
