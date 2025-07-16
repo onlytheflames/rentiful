@@ -1,10 +1,15 @@
 import express from "express";
-import { getManager, createManager } from "../controllers/managerControllers";
+import {
+  getManager,
+  createManager,
+  updateManager,
+} from "../controllers/managerControllers";
 
 const router = express.Router();
 
 // The userId that we pass on the frontend represents the cognitoId/sub
 router.get("/:cognitoId", getManager);
+router.put("/:cognitoId", updateManager);
 router.post("/", createManager);
 
 export default router;
