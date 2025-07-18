@@ -29,7 +29,7 @@ app.get("/", authMiddleware(["tenant"]), (req, res) => {
 });
 
 // app.use("/applications", applicationRoutes);
-// app.use("/properties", propertyRoutes);
+app.use("/properties", propertyRoutes);
 // app.use("/leases", leaseRoutes);
 app.use("/tenants", authMiddleware(["tenant"]), tenantRoutes);
 app.use("/managers", authMiddleware(["manager"]), managerRoutes);
