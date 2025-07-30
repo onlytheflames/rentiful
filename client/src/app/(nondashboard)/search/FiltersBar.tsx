@@ -73,7 +73,7 @@ const FiltersBar = () => {
     updateURL(newFilters);
   };
 
-  /* const handleLocationSearch = async () => {
+  const handleLocationSearch = async () => {
     try {
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
@@ -95,7 +95,7 @@ const FiltersBar = () => {
     } catch (err) {
       console.error("Error search location:", err);
     }
-  }; */
+  };
 
   return (
     <div className="scrollbar-hide flex w-full items-center justify-between overflow-hidden overflow-x-auto py-5">
@@ -123,7 +123,7 @@ const FiltersBar = () => {
             className="w-40 rounded-l-xl rounded-r-none border-r-0 border-primary-400"
           />
           <Button
-            // onClick={handleLocationSearch}
+            onClick={handleLocationSearch}
             className={`border-l-none rounded-l-none rounded-r-xl border border-primary-400 shadow-none hover:bg-primary-700 hover:text-primary-50`}
           >
             <Search className="h-4 w-4" />
