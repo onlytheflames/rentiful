@@ -18,7 +18,7 @@ export const api = createApi({
   }),
   reducerPath: "api",
   // State that you're saving into backend, and you're naming it a certain thing.
-  tagTypes: ["Managers", "Tenants", "Properties"],
+  tagTypes: ["Managers", "Tenants", "Properties", "PropertyDetails"],
   endpoints: (build) => ({
     /* AUTH ENDPOINT */
 
@@ -105,6 +105,16 @@ export const api = createApi({
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
           error: "Failed to fetch properties.",
+        });
+      },
+    }),
+
+    getProperty: build.query<Property, number>({
+      query: (id) => `properties/${id}`,
+      providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to load property details.",
         });
       },
     }),
@@ -206,6 +216,7 @@ export const api = createApi({
 export const {
   useGetAuthUserQuery,
   useGetPropertiesQuery,
+  useGetPropertyQuery,
   useGetTenantQuery,
   useUpdateTenantSettingsMutation,
   useAddFavoritePropertyMutation,
