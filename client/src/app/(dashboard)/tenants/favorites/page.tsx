@@ -1,17 +1,17 @@
 "use client";
 
-/* import Card from "@/components/Card";
+import Card from "@/components/Card";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import {
   useGetAuthUserQuery,
   useGetPropertiesQuery,
   useGetTenantQuery,
-} from "@/state/api"; */
+} from "@/state/api";
 import React from "react";
 
 const Favorites = () => {
-  /* const { data: authUser } = useGetAuthUserQuery();
+  const { data: authUser } = useGetAuthUserQuery();
   const { data: tenant } = useGetTenantQuery(
     authUser?.cognitoInfo?.userId || "",
     {
@@ -24,16 +24,18 @@ const Favorites = () => {
     isLoading,
     error,
   } = useGetPropertiesQuery(
+    // Instead of fetching all properties, only return the tenant's favorites. -> Check the controller
     { favoriteIds: tenant?.favorites?.map((fav: { id: number }) => fav.id) },
+    // If there is no favorite, we don't call this
     { skip: !tenant?.favorites || tenant?.favorites.length === 0 },
   );
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading favorites</div>; */
+  if (error) return <div>Error loading favorites</div>;
 
   return (
     <div className="dashboard-container">
-      {/* <Header
+      <Header
         title="Favorited Properties"
         subtitle="Browse and manage your saved property listings"
       />
@@ -51,8 +53,7 @@ const Favorites = () => {
       </div>
       {(!favoriteProperties || favoriteProperties.length === 0) && (
         <p>You don&lsquo;t have any favorited properties</p>
-      )} */}
-      This is tenant's favorite.
+      )}
     </div>
   );
 };
