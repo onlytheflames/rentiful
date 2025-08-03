@@ -224,6 +224,22 @@ export const api = createApi({
 
     /* MANAGER ENDPOINT */
 
+    getManagerProperties: build.query<Property[], string>({
+      query: (cognitoId) => `managers/${cognitoId}/properties`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+              { type: "Properties", id: "LIST" },
+            ]
+          : [{ type: "Properties", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to load manager profile.",
+        });
+      },
+    }),
+
     updateManagerSettings: build.mutation<
       Manager,
       { cognitoId: string } & Partial<Manager>
@@ -284,7 +300,9 @@ export const {
   useGetCurrentResidencesQuery,
   useAddFavoritePropertyMutation,
   useRemoveFavoritePropertyMutation,
+  useGetManagerPropertiesQuery,
   useUpdateManagerSettingsMutation,
   useGetLeasesQuery,
+  useGetPropertyLeasesQuery,
   useGetPaymentsQuery,
 } = api;

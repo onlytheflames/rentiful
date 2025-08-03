@@ -27,7 +27,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     }
   }, [authUser, router, pathname]);
 
-  // if (authLoading || isLoading) return <>Loading...</>;
+  if (authLoading || isLoading) return <>Loading...</>;
 
   return (
     <div className="h-full w-full">
