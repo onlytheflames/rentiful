@@ -1,5 +1,12 @@
 import { cleanParams, createNewUserInDatabase, withToast } from "@/lib/utils";
-import { Manager, Property, Tenant } from "@/types/prismaTypes";
+import {
+  Application,
+  Lease,
+  Manager,
+  Payment,
+  Property,
+  Tenant,
+} from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
@@ -18,7 +25,15 @@ export const api = createApi({
   }),
   reducerPath: "api",
   // State that you're saving into backend, and you're naming it a certain thing.
-  tagTypes: ["Managers", "Tenants", "Properties", "PropertyDetails"],
+  tagTypes: [
+    "Managers",
+    "Tenants",
+    "Properties",
+    "PropertyDetails",
+    "Payments",
+    "Applications",
+    "Leases",
+  ],
   endpoints: (build) => ({
     /* AUTH ENDPOINT */
 
@@ -151,6 +166,22 @@ export const api = createApi({
       },
     }),
 
+    getCurrentResidences: build.query<Property[], string>({
+      query: (cognitoId) => `tenants/${cognitoId}/current-residences`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+              { type: "Properties", id: "LIST" },
+            ]
+          : [{ type: "Properties", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch current residences.",
+        });
+      },
+    }),
+
     addFavoriteProperty: build.mutation<
       Tenant,
       { cognitoId: string; propertyId: number }
@@ -210,6 +241,37 @@ export const api = createApi({
         });
       },
     }),
+
+    /* LEASE/APPLICATION ENDPOINT */
+    getLeases: build.query<Lease[], number>({
+      query: () => "leases",
+      providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch leases.",
+        });
+      },
+    }),
+
+    getPropertyLeases: build.query<Lease[], number>({
+      query: (propertyId) => `properties/${propertyId}/leases`,
+      providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch property leases.",
+        });
+      },
+    }),
+
+    getPayments: build.query<Payment[], number>({
+      query: (leaseId) => `leases/${leaseId}/payments`,
+      providesTags: ["Payments"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch payment info.",
+        });
+      },
+    }),
   }),
 });
 
@@ -219,7 +281,10 @@ export const {
   useGetPropertyQuery,
   useGetTenantQuery,
   useUpdateTenantSettingsMutation,
+  useGetCurrentResidencesQuery,
   useAddFavoritePropertyMutation,
   useRemoveFavoritePropertyMutation,
   useUpdateManagerSettingsMutation,
+  useGetLeasesQuery,
+  useGetPaymentsQuery,
 } = api;
