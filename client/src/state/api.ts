@@ -258,7 +258,26 @@ export const api = createApi({
       },
     }),
 
+    createProperty: build.mutation<Property, FormData>({
+      query: (newProperty) => ({
+        url: `properties`,
+        method: "POST",
+        body: newProperty,
+      }),
+      invalidatesTags: (result) => [
+        { type: "Properties", id: "LIST" },
+        { type: "Managers", id: result?.manager?.id },
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Property created successfully!",
+          error: "Failed to create property.",
+        });
+      },
+    }),
+
     /* LEASE/APPLICATION ENDPOINT */
+
     getLeases: build.query<Lease[], number>({
       query: () => "leases",
       providesTags: ["Leases"],
@@ -302,6 +321,7 @@ export const {
   useRemoveFavoritePropertyMutation,
   useGetManagerPropertiesQuery,
   useUpdateManagerSettingsMutation,
+  useCreatePropertyMutation,
   useGetLeasesQuery,
   useGetPropertyLeasesQuery,
   useGetPaymentsQuery,
