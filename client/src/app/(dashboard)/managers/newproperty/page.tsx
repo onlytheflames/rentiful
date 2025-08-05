@@ -44,23 +44,26 @@ const NewProperty = () => {
       throw new Error("No manager ID found");
     }
 
+    // We're using FormData because we have images that we need to deal with.
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (key === "photoUrls") {
         const files = value as File[];
         files.forEach((file: File) => {
+          // adding the photo to the formData object as a File type array into the photoUrls key
           formData.append("photos", file);
         });
       } else if (Array.isArray(value)) {
         formData.append(key, JSON.stringify(value));
       } else {
-        formData.append(key, String(value));
+        formData.append(key, String(value)); // For normal situation
       }
     });
 
+    // Adding cognitoId for formData object so we can use it
     formData.append("managerCognitoId", authUser.cognitoInfo.userId);
 
-    await createProperty(formData);
+    await createProperty(formData); // Trigger the endpoint
   };
 
   return (

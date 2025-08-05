@@ -243,7 +243,7 @@ export const createProperty = async (
       ...propertyData
     } = req.body;
 
-    const photoUrls = await Promise.all(
+    /* const photoUrls = await Promise.all(
       files.map(async (file) => {
         const uploadParams = {
           Bucket: process.env.S3_BUCKET_NAME!,
@@ -259,7 +259,7 @@ export const createProperty = async (
 
         return uploadResult.Location;
       })
-    );
+    ); */
 
     // Convert user typed location into latitude & longitude
     const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
@@ -299,7 +299,7 @@ export const createProperty = async (
     const newProperty = await prisma.property.create({
       data: {
         ...propertyData,
-        photoUrls,
+        // photoUrls,
         locationId: location.id,
         managerCognitoId,
         amenities:
