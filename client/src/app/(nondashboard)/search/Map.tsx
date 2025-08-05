@@ -27,6 +27,8 @@ const Map = () => {
       zoom: 9,
     });
 
+    console.log("coordinate is:", filters.coordinates);
+
     properties.forEach((property) => {
       const marker = createPropertyMarker(property, map);
       const markerElement = marker.getElement();
