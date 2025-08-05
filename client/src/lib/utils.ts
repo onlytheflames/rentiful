@@ -40,6 +40,7 @@ type MutationMessages = {
   error: string;
 };
 
+// T represents whatever type the Promise resolves to
 export const withToast = async <T>(
   mutationFn: Promise<T>,
   messages: Partial<MutationMessages>,
@@ -47,9 +48,9 @@ export const withToast = async <T>(
   const { success, error } = messages;
 
   try {
-    const result = await mutationFn;
+    const result = await mutationFn; // result is of type T
     if (success) toast.success(success);
-    return result;
+    return result; // returns type T
   } catch (err) {
     if (error) toast.error(error);
     throw err;

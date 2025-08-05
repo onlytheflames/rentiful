@@ -117,6 +117,7 @@ export const api = createApi({
               { type: "Properties", id: "LIST" },
             ]
           : [{ type: "Properties", id: "LIST" }],
+      // Once the API call finished and we got the response trigger toas function via queryFullfilled
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
           error: "Failed to fetch properties.",
