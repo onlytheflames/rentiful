@@ -25,5 +25,4 @@ const Providers = ({ children }: { children: ReactNode }) => {
     </StoreProvider>
   );
 };
-``;
 export default Providers;
