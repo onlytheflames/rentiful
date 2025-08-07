@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-app.get("/", authMiddleware(["tenant"]), (req, res) => {
+app.get("/", (req, res) => {
   res.send("This is home route");
 });
 
